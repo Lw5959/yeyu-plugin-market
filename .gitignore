@@ -1,5 +1,6 @@
 /release/
 node_modules/
+target/
 *.o
 *.wasm
 .DS_Store

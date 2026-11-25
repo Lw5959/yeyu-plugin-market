@@ -1,0 +1,16 @@
+[package]
+name = "yeyu-plugin-workflows"
+version = "1.0.0"
+edition = "2024"
+license = "MIT"
+publish = false
+
+[dependencies]
+pulldown-cmark = { version = "0.13", default-features = false }
+
+[profile.release]
+opt-level = "s"
+codegen-units = 1
+lto = true
+panic = "abort"
+strip = true

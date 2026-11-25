@@ -1,0 +1,30 @@
+{
+  "apiVersion": 2,
+  "id": "yeyu.spreadsheet-tools",
+  "name": "表格转换",
+  "version": "1.0.0",
+  "market": {
+    "description": "把 Excel 或 Numbers 复制的单元格、CSV 转成 Markdown 表格，也可导回 CSV。支持引号、空单元格、管道符与单元格换行。",
+    "author": "页屿",
+    "license": "MIT",
+    "featured": true
+  },
+  "commands": [
+    {
+      "id": "tsv_to_markdown",
+      "label": "电子表格单元格转 Markdown",
+      "scope": "selection"
+    },
+    {
+      "id": "csv_to_markdown",
+      "label": "CSV 转 Markdown 表格",
+      "scope": "selection"
+    },
+    {
+      "id": "markdown_to_csv",
+      "label": "Markdown 表格转 CSV",
+      "scope": "selection"
+    }
+  ],
+  "javascript": "// SPDX-License-Identifier: MIT\n\nconst eol = /\\r\\n|\\r|\\n/\n\nfunction bounds(source) {\n  const prefix = source.match(/^[\\r\\n]*/)[0]\n  const suffix = source.slice(prefix.length).match(/[\\r\\n]*$/)[0]\n  const body = source.slice(prefix.length, source.length - suffix.length)\n  return { prefix, body, suffix, newline: source.match(eol)?.[0] ?? '\\n' }\n}\n\nfunction readRows(source, separator) {\n  const rows = []\n  let at = 0\n  while (at < source.length) {\n    const row = []\n    while (true) {\n      let value = ''\n      if (source[at] === '\"') {\n        at++\n        while (true) {\n          const quote = source.indexOf('\"', at)\n          if (quote < 0) return null\n          value += source.slice(at, quote)\n          at = quote + 1\n          if (source[at] !== '\"') break\n          value += '\"'\n          at++\n        }\n      } else {\n        const start = at\n        while (at < source.length && source[at] !== separator && source[at] !== '\\r' && source[at] !== '\\n') {\n          if (source[at] === '\"') return null\n          at++\n        }\n        value = source.slice(start, at)\n      }\n      row.push(value)\n      if (source[at] !== separator) break\n      at++\n    }\n    rows.push(row)\n    // 分隔符可以出现在引号字段中。只有已结束的记录才消耗行尾。\n    if (source[at] === '\\r') at += source[at + 1] === '\\n' ? 2 : 1\n    else if (source[at] === '\\n') at++\n    else if (at !== source.length) return null\n  }\n  return rows\n}\n\nconst entities = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '\\n': '&#10;', '\\r': '&#13;', '\\t': '&#9;' }\nconst decodedEntities = { '&amp;': '&', '&lt;': '<', '&gt;': '>', '&#10;': '\\n', '&#13;': '\\r', '&#9;': '\\t', '&#32;': ' ' }\n\nfunction markdownCell(value) {\n  return value\n    .replace(/[&<>\\r\\n\\t]/g, match => entities[match])\n    .replace(/[\\\\|\\[\\]*_`~]/g, '\\\\$&')\n    .replace(/^ +| +$/g, margin => '&#32;'.repeat(margin.length))\n}\n\nfunction toMarkdown(source, separator) {\n  const { prefix, body, suffix, newline } = bounds(source)\n  const records = readRows(body.replace(/^\\uFEFF/, ''), separator)\n  const columns = records?.[0]?.length ?? 0\n  if (columns < 2 || records.some(record => record.length !== columns)) return source\n  const rows = records.map(record => '| ' + record.map(markdownCell).join(' | ') + ' |')\n  rows.splice(1, 0, '|' + ' --- |'.repeat(columns))\n  return prefix + rows.join(newline) + suffix\n}\n\nfunction splitMarkdownRow(line) {\n  const cells = []\n  const raw = line.trim()\n  let start = raw.startsWith('|') ? 1 : 0\n  for (let at = start; at < raw.length; at++) {\n    if (raw[at] === '\\\\') {\n      at++\n    } else if (raw[at] === '|') {\n      cells.push(raw.slice(start, at).trim())\n      start = at + 1\n    }\n  }\n  if (start < raw.length || cells.length === 0) cells.push(raw.slice(start).trim())\n  return cells\n}\n\nfunction csvCell(value) {\n  const decoded = value\n    .replace(/\\\\([\\\\|\\[\\]*_`~])/g, '$1')\n    .replace(/&(amp|lt|gt|#10|#13|#9|#32);/g, match => decodedEntities[match])\n  return /[\",\\r\\n]|^\\s|\\s$/.test(decoded) ? '\"' + decoded.replaceAll('\"', '\"\"') + '\"' : decoded\n}\n\nexport function tsv_to_markdown(text) {\n  return toMarkdown(text, '\\t')\n}\n\nexport function csv_to_markdown(text) {\n  return toMarkdown(text, ',')\n}\n\nexport function markdown_to_csv(text) {\n  const { prefix, body, suffix, newline } = bounds(text)\n  const rows = body.split(eol).map(splitMarkdownRow)\n  const columns = rows[0]?.length ?? 0\n  if (columns < 2 || rows.length < 2 || rows.some(row => row.length !== columns) ||\n      !rows[1].every(cell => /^:?-+:?$/.test(cell))) return text\n  rows.splice(1, 1)\n  return prefix + rows.map(row => row.map(csvCell).join(',')).join(newline) + suffix\n}\n"
+}

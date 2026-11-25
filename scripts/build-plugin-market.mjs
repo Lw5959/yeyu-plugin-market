@@ -11,24 +11,29 @@ const validText = (value, length = 120) => typeof value === 'string' && value.tr
 const versionPattern = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$/
 const plugins = packages.map(file => {
   const bytes = readFileSync(join(source, file))
-  const { apiVersion, id, name, version, market, wasm } = JSON.parse(bytes.toString('utf8'))
+  const { apiVersion, id, name, version, market, wasm, javascript } = JSON.parse(bytes.toString('utf8'))
+  const validProgram = (apiVersion === 1 && typeof wasm === 'string' && wasm && javascript === undefined)
+    || (apiVersion === 2 && typeof javascript === 'string' && javascript.trim() && wasm === undefined)
   if (!Number.isInteger(apiVersion) || apiVersion < 1 || apiVersion > 0xFFFFFFFF
     || typeof id !== 'string' || !/^[a-zA-Z0-9_.-]{1,100}$/.test(id)
     || !validText(name) || !validText(version) || !versionPattern.test(version)
     || !validText(market?.description, 600) || !validText(market?.author) || !validText(market?.license)
-    || typeof wasm !== 'string' || !wasm || ids.has(id) || bytes.length > 2 * 1024 * 1024) {
+    || !validProgram || ids.has(id) || bytes.length > 2 * 1024 * 1024) {
     throw new Error(`插件包或市场资料无效 ${file}`)
   }
   ids.add(id)
   const sha256 = createHash('sha256').update(bytes).digest('hex')
   const download = `packages/${id}-${sha256}.yeyu-plugin.json`
   const { description, author, license } = market
-  return { entry: { apiVersion, id, name, version, description, author, license, sha256, download }, bytes }
-})
+  return { entry: { apiVersion, id, name, version, description, author, license, sha256, download }, bytes,
+    featured: market.featured === true }
+}).sort((left, right) => Number(right.featured) - Number(left.featured))
 
 mkdirSync(join(destination, 'packages'), { recursive: true })
 for (const { entry, bytes } of plugins) writeFileSync(join(destination, entry.download), bytes)
-if (existsSync(join(source, 'LICENSE'))) copyFileSync(join(source, 'LICENSE'), join(destination, 'LICENSE'))
+for (const notice of ['LICENSE', 'THIRD-PARTY-NOTICES.txt']) {
+  if (existsSync(join(source, notice))) copyFileSync(join(source, notice), join(destination, notice))
+}
 // 先就绪所有包，再切换目录，使用旧目录的客户端仍可下载旧版本。
 const temporary = join(destination, `.index-${randomUUID()}.json`)
 const index = { schemaVersion: 1, name: '页屿插件市场', plugins: plugins.map(({ entry }) => entry) }

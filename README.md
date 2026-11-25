@@ -1,20 +1,23 @@
 # 页屿插件市场
 
-页屿是一款桌面 Markdown 编辑器。这个仓库提供应用使用的公开插件目录、可安装的 Wasm 插件、源码和开发文档。
+页屿是一款桌面 Markdown 编辑器。这个仓库提供公开插件目录、可安装的 JavaScript 和 WebAssembly 插件、源码和开发文档。
 
 - [浏览市场](https://lw5959.github.io/yeyu-plugin-market/)
 - [应用目录](https://lw5959.github.io/yeyu-plugin-market/index.json)
 - [插件开发指南](docs/plugins.md)
 
-页屿 0.2.1 起，在「编辑 → 插件市场」默认连接本目录。「内置插件」可以离线安装。较早版本可复制应用目录地址，在「市场源」中连接。安装后在「已安装」中启用插件，选中文本并运行命令，审阅差异后应用。
+页屿 0.2.1 起，在「编辑 → 插件市场」默认连接本目录。「内置插件」可以离线安装。页屿 0.2.2 支持 JavaScript，并随应用提供下列六款插件。安装后在「已安装」中启用，再从「编辑 → 运行插件」执行命令。审阅差异后可以应用并撤销。
 
 ## 插件
 
-| 插件 | 开发说明 |
-|---|---|
-| 清理行尾空白 | [输入输出与重建](examples/plugins/trim-lines.md) |
-| 任务清单 | [输入输出与重建](examples/plugins/task-list.md) |
-| 标题层级 | [输入输出与重建](examples/plugins/heading-levels.md) |
+| 插件 | 语言 | 用法与开发说明 |
+|---|---|---|
+| 表格转换 | JavaScript | [电子表格、CSV 与 Markdown 表格互转](examples/plugins/spreadsheet-tools.md) |
+| 中文排版 | Rust | [整理中英文和数字间距](examples/plugins/chinese-typography.md) |
+| 文档目录 | Rust | [生成、更新和移除 Markdown 目录](examples/plugins/document-toc.md) |
+| 清理行尾空白 | C/Wasm | [输入输出与重建](examples/plugins/trim-lines.md) |
+| 任务清单 | C/Wasm | [输入输出与重建](examples/plugins/task-list.md) |
+| 标题层级 | C/Wasm | [输入输出与重建](examples/plugins/heading-levels.md) |
 
 ## 提交与发布
 
@@ -26,4 +29,4 @@
 pnpm plugin:market examples/plugins docs
 ```
 
-市场工具与随附插件采用 [MIT 许可证](LICENSE)。
+市场工具与随附插件采用 MIT 许可证。[许可证](LICENSE) · [第三方许可](examples/plugins/THIRD-PARTY-NOTICES.txt)

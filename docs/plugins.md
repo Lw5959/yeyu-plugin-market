@@ -1,34 +1,60 @@
 # 页屿插件开发指南
 
-页屿插件 v1 把一段 Markdown 交给 WebAssembly 函数处理。用户在「编辑 → 插件管理」选择当前选区或全文，运行命令并审阅差异。应用后的修改可以撤销。
+页屿插件接收 Markdown 文本并返回修改后的文本。JavaScript 可以直接编写 ES 模块，Rust 使用 WebAssembly。两种语言都可从文件或市场安装。启用后从「编辑 → 运行插件」执行，修改经差异审阅后应用，应用后可撤销。
 
-| 示例 | 用法 |
-| --- | --- |
-| [清理行尾空白](../examples/plugins/trim-lines.md) | 移除各行结尾的空格和 Tab |
-| [任务清单](../examples/plugins/task-list.md) | 将所选行转为任务，批量完成或重置任务 |
-| [标题层级](../examples/plugins/heading-levels.md) | 批量提升或降低 Markdown 标题层级 |
+| 示例 | 语言 | 用法 |
+| --- | --- | --- |
+| [表格转换](../examples/plugins/spreadsheet-tools.md) | JavaScript | Excel 或 Numbers 单元格、CSV 转 Markdown 表格，Markdown 表格转 CSV |
+| [中文排版](../examples/plugins/chinese-typography.md) | Rust | 给中文和英文、数字补空格，保留代码、链接和原有行尾 |
+| [文档目录](../examples/plugins/document-toc.md) | Rust | 生成、更新或移除可点击的 Markdown 目录 |
+| [清理行尾空白](../examples/plugins/trim-lines.md) | C/Wasm | 移除各行结尾的空格和 Tab |
+| [任务清单](../examples/plugins/task-list.md) | C/Wasm | 将所选行转为任务，批量完成或重置任务 |
+| [标题层级](../examples/plugins/heading-levels.md) | C/Wasm | 批量提升或降低 Markdown 标题层级 |
 
-## 编写模块和清单
+## 清单
 
-1. 从任一示例复制源码和 `.yeyu-plugin.json` 清单。将 `id` 改成自己维护的唯一标识，例如 `com.example.normalize`。发布更新时沿用 ID，递增 `version`。
-2. 实现 `alloc` 及命令函数。清单中的命令 `id` 要与对应的 WebAssembly 导出同名，`label` 是用户看到的命令名称。
-3. 用带 `wasm32` 后端的 Clang 和 `wasm-ld` 编译。也可以使用能输出相同 ABI 的其他编译器。保留模块所需的导出。
-4. 运行 `pnpm plugin:pack 路径/插件.yeyu-plugin.json 路径/模块.wasm`。脚本检查 Wasm 和导出名称，将标准 Base64 写入清单的 `wasm` 字段。页屿安装时继续校验函数签名。
-
-清单是 UTF-8 JSON。开发新插件时可以先留空 `wasm`，打包后再安装。
+从示例复制一份 `.yeyu-plugin.json` 清单，将 `id` 改成自己维护的唯一标识，命令 `id` 与模块的导出同名。发布更新时沿用插件 ID，并递增 SemVer 版本。使用 `scope` 指定菜单运行时的处理范围，`selection` 处理选区，`document` 处理全文。省略时使用选区，也可在插件管理中临时调整处理范围。
 
 ```json
 {
-  "apiVersion": 1,
+  "apiVersion": 2,
   "id": "com.example.normalize",
   "name": "示例转换",
   "version": "1.0.0",
   "commands": [
-    { "id": "normalize", "label": "整理所选文字" }
-  ],
-  "wasm": ""
+    { "id": "normalize", "label": "整理所选文字", "scope": "selection" }
+  ]
 }
 ```
+
+## JavaScript
+
+将上面的清单保存为 `normalize.yeyu-plugin.json`，将下方源码保存为 `normalize.mjs`。每个命令导出一个同步函数，输入和输出都是字符串。原样返回输入表示没有改动。需要提示用户时，可抛出带简洁说明的 `Error`。
+
+```js
+export function normalize(text) {
+  return text.replace(/[ \t]+(?=\r|\n|$)/g, '')
+}
+```
+
+```sh
+pnpm plugin:pack normalize.yeyu-plugin.json normalize.mjs
+```
+
+打包器检查 `.js` 或 `.mjs` 的语法，将 UTF-8 源码写到 `javascript` 字段。需要依赖时先用自己的构建工具产出一个独立的 ES 模块。安装时会加载模块并核对命令导出。页屿 0.2.2 起支持此接口。每次安装校验或运行有 2 秒执行预算，JavaScript 堆最多 32 MiB。运行时提供标准语言内建对象，模块加载、DOM、Node.js、文件和网络接口均未开放。[rquickjs 源码](https://github.com/DelSkayn/rquickjs)
+
+## Rust
+
+将清单的 `apiVersion` 设为 `1`。从 [Rust 示例工程](../examples/plugins/workflows/) 的 `src/bin/` 复制一个示例，保留 `src/lib.rs` 中的 `export_commands!` 宏和输入输出缓冲。每个命令实现 `fn(&str) -> Option<String>`，`None` 表示原文保持不变。下方命令可重建示例插件。
+
+```sh
+rustup target add wasm32-unknown-unknown
+cargo test --locked --manifest-path examples/plugins/workflows/Cargo.toml
+cargo build --locked --release --target wasm32-unknown-unknown --manifest-path examples/plugins/workflows/Cargo.toml
+pnpm plugin:pack examples/plugins/document-toc.yeyu-plugin.json examples/plugins/workflows/target/wasm32-unknown-unknown/release/document-toc.wasm
+```
+
+打包器将 `.wasm` 编码为 Base64，写到 `wasm` 字段。采用其他语言的 WebAssembly 编译器时，模块按下表导出函数。页屿用 Wasmi 加载无导入的模块，线性内存最多 32 MiB，并限制指令数。[Wasmi 源码](https://github.com/wasmi-labs/wasmi)
 
 | Wasm 导出 | 用法 |
 | --- | --- |
@@ -36,14 +62,12 @@
 | `alloc(length: i32) -> i32` | 返回可写入 `length` 字节的地址 |
 | `<命令 ID>(ptr: i32, length: i32) -> i64` | 返回输出地址和长度，高 32 位为地址，低 32 位为 UTF-8 字节数 |
 
-地址和长度按无符号 32 位数打包。命令可以在原缓冲区修改，也可以返回另一个缓冲区。原样返回输入表示没有改动。示例以字节处理 ASCII Markdown 标记，保留其他 UTF-8 字节和 LF、CRLF、CR。
+地址和长度按无符号 32 位数打包。命令可以在原缓冲区修改，也可以返回另一个缓冲区。页屿只传入此次命令的文本。卸载、停用或更新后，仍在运行的旧结果会丢弃。单包最多 2 MiB，输入和输出各最多 4 MiB。
 
-页屿为每次运行创建独立的 Wasmi 实例，输入来自用户选定的文字。模块须无导入。输入和输出各最多 4 MiB，线性内存最多 32 MiB，插件包最多 2 MiB。插件运行有指令预算，停用、卸载或替换后会丢弃该次运行的旧结果。
-
-## 本地试用和发布
+## 试用和发布
 
 1. 在「编辑 → 插件管理 → 从文件安装」选择生成的包，再点「启用」。运行命令后核对差异、应用并撤销。
-2. 用中文、空选区、原文不变、混合换行以及代码块做测试。试用时可从任务清单和标题层级的示例复制输入。
-3. 重装同一 ID 可在当前窗口替换插件，原启用状态会保留。通过市场发布时使用递增的 SemVer，并填写描述、作者和许可证。目录制作和提交步骤见[插件市场发布指南](plugin-market.md)。
+2. 用中文、空选区、原文不变、混合换行及代码块做测试。每个示例附有可粘贴到编辑器的样稿。
+3. 重装同一 ID 时，替换会即时生效，并沿用启用状态。通过市场更新时递增版本，并填写描述、作者和许可证。[插件市场发布指南](plugin-market.md)
 
-首批示例源码及插件包采用 [MIT 许可证](../examples/plugins/LICENSE)。宿主使用的 Wasm 运行时见 [Wasmi 源码与许可证](https://github.com/wasmi-labs/wasmi)。
+示例源码及插件包采用 MIT 许可证，Rust 插件依赖的许可随包分发。[示例许可证](../examples/plugins/LICENSE) · [第三方许可](../examples/plugins/THIRD-PARTY-NOTICES.txt)

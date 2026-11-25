@@ -4,6 +4,39 @@
   "plugins": [
     {
       "apiVersion": 1,
+      "id": "yeyu.chinese-typography",
+      "name": "中文排版",
+      "version": "1.0.0",
+      "description": "给正文里的中文与连续英文、数字补空格。保留代码、公式、链接、图片、标签、YAML 与原有换行。",
+      "author": "页屿",
+      "license": "MIT",
+      "sha256": "81d1d6db6501cf21466ec258a9d72b8a77fe75a0e2a8b5f3be837465cb1941b0",
+      "download": "packages/yeyu.chinese-typography-81d1d6db6501cf21466ec258a9d72b8a77fe75a0e2a8b5f3be837465cb1941b0.yeyu-plugin.json"
+    },
+    {
+      "apiVersion": 1,
+      "id": "yeyu.document-toc",
+      "name": "文档目录",
+      "version": "1.0.0",
+      "description": "把章节大纲写进 Markdown，生成可点击的层级目录。标题调整后可以重新生成，也可以只移除插件生成的目录。",
+      "author": "页屿",
+      "license": "MIT",
+      "sha256": "33d47f50fafa1e9c640e1f16862d569b1dddbdd214b3dddc4928c04f7fb1bf2f",
+      "download": "packages/yeyu.document-toc-33d47f50fafa1e9c640e1f16862d569b1dddbdd214b3dddc4928c04f7fb1bf2f.yeyu-plugin.json"
+    },
+    {
+      "apiVersion": 2,
+      "id": "yeyu.spreadsheet-tools",
+      "name": "表格转换",
+      "version": "1.0.0",
+      "description": "把 Excel 或 Numbers 复制的单元格、CSV 转成 Markdown 表格，也可导回 CSV。支持引号、空单元格、管道符与单元格换行。",
+      "author": "页屿",
+      "license": "MIT",
+      "sha256": "db7c27702c01255e234dc7d3ef9d430999f9a72a6a509d0edbc9dc77cd217a0b",
+      "download": "packages/yeyu.spreadsheet-tools-db7c27702c01255e234dc7d3ef9d430999f9a72a6a509d0edbc9dc77cd217a0b.yeyu-plugin.json"
+    },
+    {
+      "apiVersion": 1,
       "id": "yeyu.heading-levels",
       "name": "标题层级",
       "version": "1.0.0",

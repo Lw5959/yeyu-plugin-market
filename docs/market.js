@@ -17,10 +17,18 @@ try {
   for (const plugin of plugins) {
     const row = document.createElement('article')
     const info = document.createElement('div')
+    const compatibility = plugin.apiVersion === 2 ? ' · JavaScript（页屿 0.2.2 起）' : ''
+    const details = text('p', `${plugin.author} · ${plugin.version} · ${plugin.license}${compatibility}`, 'details')
+    const official = /^yeyu\.([a-z-]+)$/.exec(plugin.id)
+    if (official) {
+      const guide = text('a', '用法与源码')
+      guide.href = `https://github.com/Lw5959/yeyu-plugin-market/blob/main/examples/plugins/${official[1]}.md`
+      details.append(' · ', guide)
+    }
     info.append(
       text('h2', plugin.name),
       text('p', plugin.description),
-      text('p', `${plugin.author} · ${plugin.version} · ${plugin.license}`, 'details'),
+      details,
     )
     const download = text('a', '下载', 'download')
     download.href = new URL(plugin.download, source.href)
