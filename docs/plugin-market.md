@@ -1,8 +1,18 @@
 # 插件市场目录与发布
 
-「编辑 → 插件市场」打开内置目录，可离线搜索并安装。每条资料显示插件名称、用途、作者、版本和许可证。新安装的插件默认停用。点击卡片上的「已安装」可到管理页启用、试用或卸载。
+「编辑 → 插件市场」默认连接官方目录。三款内置插件随应用发布，可在「内置插件」中离线搜索和安装，在线目录加载中也能切过去。在线目录连接失败时会切到内置插件，并保留原市场源。每条资料显示名称、用途、作者、版本和许可证。新安装的插件默认停用，点击卡片上的「已安装」可到管理页启用、试用或卸载。[官方市场页面](https://lw5959.github.io/yeyu-plugin-market/) · [应用目录](https://lw5959.github.io/yeyu-plugin-market/index.json)
 
-## 搭建目录
+## 向官方市场提交
+
+官方目录通过 GitHub Pages 发布，开源仓库的 `main` 分支下 `docs/` 是发布目录。通过 Pull Request 提交插件包、源码、许可证、重建步骤和可复测样例。更新包沿用原 ID，并递增 SemVer。[开源市场仓库](https://github.com/Lw5959/yeyu-plugin-market) · [GitHub Pages 发布源说明](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)
+
+在市场仓库根目录运行以下命令，生成新的目录和按摘要命名的插件包。保留旧包，已经打开前一份目录的用户可以继续下载。合并到 `main` 后，检查 Pages 发布状态，并从公网下载核对 `index.json` 与各包的 SHA-256。
+
+```sh
+pnpm plugin:market examples/plugins docs
+```
+
+## 自建目录
 
 在仓库根目录生成一份可部署的静态目录。
 
@@ -16,7 +26,7 @@ pnpm plugin:market
 pnpm plugin:market ./my-plugins ./release/community-market
 ```
 
-本机试用时用下面的命令启动预览服务。在市场右上角「市场源」填写 `http://127.0.0.1:8750/index.json`，点击「连接」。选择「使用内置市场」可切回随应用提供的目录。
+本机试用时用下面的命令启动预览服务。在市场右上角「市场源」填写 `http://127.0.0.1:8750/index.json`，点击「连接」。「内置插件」可随时切换，「恢复官方市场」可清除自定义地址。
 
 ```sh
 python3 -m http.server 8750 --bind 127.0.0.1 --directory release/plugin-market
@@ -24,7 +34,7 @@ python3 -m http.server 8750 --bind 127.0.0.1 --directory release/plugin-market
 
 向其他用户提供目录时，将输出文件部署到同一个静态 HTTPS 站点，并公布 `index.json` 的直达地址。先上传新包，再发布新的目录。旧版目录引用的插件包可以保留，便于已经打开市场的用户完成安装。应用完成连接后保存市场源地址，点击「刷新市场」可检查新版本。
 
-## 提交插件和更新
+## 准备插件包
 
 1. 按[插件开发指南](plugins.md)制作并在页屿试用插件包。
 2. 在清单中增加 `market`，填写用途、作者和许可证。和插件包一起提供对应源码、构建步骤和许可证文本。
