@@ -1,4 +1,5 @@
 use pulldown_cmark::Options;
+pub mod table_layout;
 
 pub fn markdown_options() -> Options {
     Options::ENABLE_TABLES
@@ -16,6 +17,24 @@ pub fn line_ending(source: &str) -> &'static str {
         Some(at) if source.as_bytes()[at] == b'\r' => "\r",
         _ => "\n",
     }
+}
+
+pub fn physical_lines(mut source: &str) -> impl Iterator<Item = (&str, &str)> {
+    std::iter::from_fn(move || {
+        if source.is_empty() {
+            return None;
+        }
+        let at = source.find(['\r', '\n']).unwrap_or(source.len());
+        let (line, rest) = source.split_at(at);
+        let size = if rest.starts_with("\r\n") {
+            2
+        } else {
+            usize::from(!rest.is_empty())
+        };
+        let (ending, tail) = rest.split_at(size);
+        source = tail;
+        Some((line, ending))
+    })
 }
 
 #[cfg(target_arch = "wasm32")]

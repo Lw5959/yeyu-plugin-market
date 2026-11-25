@@ -1,0 +1,20 @@
+{
+  "apiVersion": 3,
+  "id": "yeyu.image-organizer",
+  "name": "图片整理",
+  "version": "1.0.0",
+  "market": {
+    "description": "收拢本文引用的本地图片，按内容去重并更新为相对路径。复制前预览修改，并列出无法读取的图片。",
+    "author": "页屿",
+    "license": "MIT",
+    "featured": true
+  },
+  "commands": [
+    {
+      "id": "collect_images",
+      "label": "收拢本文本地图片…",
+      "workflow": "images"
+    }
+  ],
+  "javascript": "// SPDX-License-Identifier: MIT\n\nexport function collect_images(input) {\n  const { images } = JSON.parse(input)\n  // 文件名由内容决定。新增或调整图片的顺序时，已有链接仍指向同一份资源。\n  return JSON.stringify(images.map(({ digest, extension }) =>\n    `image-${digest.slice(0, 20)}.${extension}`))\n}\n"
+}

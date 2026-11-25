@@ -3,6 +3,17 @@
   "name": "页屿插件市场",
   "plugins": [
     {
+      "apiVersion": 3,
+      "id": "yeyu.batch-format",
+      "name": "批量格式化",
+      "version": "1.0.0",
+      "description": "整理标题与块间空行，并对齐 Markdown 表格。支持全文和多个文件，写回之前逐份预览。",
+      "author": "页屿",
+      "license": "MIT",
+      "sha256": "e51df350e60e484f955f7a2e413c883bb437ca9b892dd4a833fe3669e248c430",
+      "download": "packages/yeyu.batch-format-e51df350e60e484f955f7a2e413c883bb437ca9b892dd4a833fe3669e248c430.yeyu-plugin.json"
+    },
+    {
       "apiVersion": 1,
       "id": "yeyu.chinese-typography",
       "name": "中文排版",
@@ -25,6 +36,17 @@
       "download": "packages/yeyu.document-toc-33d47f50fafa1e9c640e1f16862d569b1dddbdd214b3dddc4928c04f7fb1bf2f.yeyu-plugin.json"
     },
     {
+      "apiVersion": 3,
+      "id": "yeyu.image-organizer",
+      "name": "图片整理",
+      "version": "1.0.0",
+      "description": "收拢本文引用的本地图片，按内容去重并更新为相对路径。复制前预览修改，并列出无法读取的图片。",
+      "author": "页屿",
+      "license": "MIT",
+      "sha256": "1710eb0b9c22f987d676255f284d3a2def691c43766c53d01c3c485d52396223",
+      "download": "packages/yeyu.image-organizer-1710eb0b9c22f987d676255f284d3a2def691c43766c53d01c3c485d52396223.yeyu-plugin.json"
+    },
+    {
       "apiVersion": 2,
       "id": "yeyu.spreadsheet-tools",
       "name": "表格转换",
@@ -34,6 +56,17 @@
       "license": "MIT",
       "sha256": "db7c27702c01255e234dc7d3ef9d430999f9a72a6a509d0edbc9dc77cd217a0b",
       "download": "packages/yeyu.spreadsheet-tools-db7c27702c01255e234dc7d3ef9d430999f9a72a6a509d0edbc9dc77cd217a0b.yeyu-plugin.json"
+    },
+    {
+      "apiVersion": 1,
+      "id": "yeyu.table-layout",
+      "name": "表格排版",
+      "version": "1.0.0",
+      "description": "对齐 Markdown 表格源码中的各列，支持中文和转义竖线，保留列对齐方式、单元格内容及行尾。",
+      "author": "页屿",
+      "license": "MIT",
+      "sha256": "07526b997f5941f842ad235c1766cc355f2839f1539d1b19fa9f41b9d790cd57",
+      "download": "packages/yeyu.table-layout-07526b997f5941f842ad235c1766cc355f2839f1539d1b19fa9f41b9d790cd57.yeyu-plugin.json"
     },
     {
       "apiVersion": 1,

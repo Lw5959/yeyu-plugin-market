@@ -1,6 +1,6 @@
 # 插件市场目录与发布
 
-「编辑 → 插件市场」默认连接官方目录。表格转换、中文排版、文档目录及此前的三个插件随应用发布，可在「内置插件」中离线搜索和安装。在线目录连接失败时会切到内置插件，并保留原市场源。新安装的插件默认停用，点击卡片上的「已安装」进入管理页启用，再从「编辑 → 运行插件」执行命令。[官方市场页面](https://lw5959.github.io/yeyu-plugin-market/) · [应用目录](https://lw5959.github.io/yeyu-plugin-market/index.json)
+「编辑 → 插件市场」默认连接官方目录。批量格式化、图片整理、表格排版及此前的六个插件随应用发布，可在「内置插件」中离线搜索和安装。在线目录连接失败时会切到内置插件，并保留原市场源。新安装的插件默认停用，点击卡片上的「已安装」进入管理页启用，再从「编辑 → 运行插件」执行命令。[官方市场页面](https://lw5959.github.io/yeyu-plugin-market/) · [应用目录](https://lw5959.github.io/yeyu-plugin-market/index.json)
 
 ## 向官方市场提交
 
@@ -57,7 +57,7 @@ python3 -m http.server 8750 --bind 127.0.0.1 --directory release/plugin-market
 
 | 插件字段 | 用途 |
 | --- | --- |
-| `id`、`name`、`version`、`apiVersion` | 与包内清单一致。版本遵循 SemVer。接口 1 为 WebAssembly，接口 2 为 JavaScript（页屿 0.2.2 起） |
+| `id`、`name`、`version`、`apiVersion` | 与包内清单一致。版本遵循 SemVer。接口 1 为 WebAssembly，接口 2 为 JavaScript（页屿 0.2.2 起），接口 3 支持多文档和图片命令（页屿 0.2.3 起） |
 | `description`、`author`、`license` | 显示用途、作者和许可证。描述最多 600 字符 |
 | `download` | 插件包的直达 URL，可相对于 `index.json`。公网用 HTTPS，本机 HTTP 要与目录同源 |
 | `sha256` | 对下载的完整文件字节计算的 SHA-256，写成 64 个十六进制字符 |

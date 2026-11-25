@@ -6,12 +6,15 @@
 - [应用目录](https://lw5959.github.io/yeyu-plugin-market/index.json)
 - [插件开发指南](docs/plugins.md)
 
-页屿 0.2.1 起，在「编辑 → 插件市场」默认连接本目录。「内置插件」可以离线安装。页屿 0.2.2 支持 JavaScript，并随应用提供下列六款插件。安装后在「已安装」中启用，再从「编辑 → 运行插件」执行命令。审阅差异后可以应用并撤销。
+页屿 0.2.1 起，在「编辑 → 插件市场」默认连接本目录。页屿 0.2.3 的「内置插件」可离线安装下列九款插件。安装后在「已安装」中启用，再从「编辑 → 运行插件」执行命令。批量格式化和图片整理使用页屿 0.2.3 的文档工作流接口。
 
 ## 插件
 
 | 插件 | 语言 | 用法与开发说明 |
 |---|---|---|
+| 批量格式化 | Rust | [逐篇预览和整理多份 Markdown](examples/plugins/batch-format.md) |
+| 图片整理 | JavaScript | [归集本地图片、去重和更新路径](examples/plugins/image-organizer.md) |
+| 表格排版 | Rust | [对齐 Markdown 表格源码](examples/plugins/table-layout.md) |
 | 表格转换 | JavaScript | [电子表格、CSV 与 Markdown 表格互转](examples/plugins/spreadsheet-tools.md) |
 | 中文排版 | Rust | [整理中英文和数字间距](examples/plugins/chinese-typography.md) |
 | 文档目录 | Rust | [生成、更新和移除 Markdown 目录](examples/plugins/document-toc.md) |

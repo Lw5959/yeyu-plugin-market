@@ -1,6 +1,10 @@
 const source = document.querySelector('#source')
 const catalog = document.querySelector('#catalog')
 const status = document.querySelector('#status')
+const requires = {
+  2: ' · JavaScript（页屿 0.2.2 起）',
+  3: ' · 页屿 0.2.3 起',
+}
 source.textContent = source.href
 
 function text(tag, value, className) {
@@ -17,7 +21,7 @@ try {
   for (const plugin of plugins) {
     const row = document.createElement('article')
     const info = document.createElement('div')
-    const compatibility = plugin.apiVersion === 2 ? ' · JavaScript（页屿 0.2.2 起）' : ''
+    const compatibility = requires[plugin.apiVersion] ?? ''
     const details = text('p', `${plugin.author} · ${plugin.version} · ${plugin.license}${compatibility}`, 'details')
     const official = /^yeyu\.([a-z-]+)$/.exec(plugin.id)
     if (official) {

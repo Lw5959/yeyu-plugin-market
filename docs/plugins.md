@@ -4,6 +4,9 @@
 
 | 示例 | 语言 | 用法 |
 | --- | --- | --- |
+| [批量格式化](../examples/plugins/batch-format.md) | Rust | 同时整理多份文档的标题间距和表格，逐份预览后保存 |
+| [图片整理](../examples/plugins/image-organizer.md) | JavaScript | 预览图片归集，按内容去重并更新本地相对路径 |
+| [表格排版](../examples/plugins/table-layout.md) | Rust | 对齐表格源码并保留单元格、列对齐和原有行尾 |
 | [表格转换](../examples/plugins/spreadsheet-tools.md) | JavaScript | Excel 或 Numbers 单元格、CSV 转 Markdown 表格，Markdown 表格转 CSV |
 | [中文排版](../examples/plugins/chinese-typography.md) | Rust | 给中文和英文、数字补空格，保留代码、链接和原有行尾 |
 | [文档目录](../examples/plugins/document-toc.md) | Rust | 生成、更新或移除可点击的 Markdown 目录 |
@@ -63,6 +66,17 @@ pnpm plugin:pack examples/plugins/document-toc.yeyu-plugin.json examples/plugins
 | `<命令 ID>(ptr: i32, length: i32) -> i64` | 返回输出地址和长度，高 32 位为地址，低 32 位为 UTF-8 字节数 |
 
 地址和长度按无符号 32 位数打包。命令可以在原缓冲区修改，也可以返回另一个缓冲区。页屿只传入此次命令的文本。卸载、停用或更新后，仍在运行的旧结果会丢弃。单包最多 2 MiB，输入和输出各最多 4 MiB。
+
+## 多文档和图片命令
+
+页屿 0.2.3 提供接口 3。清单仍选择一个 `javascript` 或 `wasm` 模块，导出函数沿用上面的接口。使用 `workflow` 声明下列工作流。
+
+| 工作流 | 输入和返回 | 页屿负责的操作 |
+| --- | --- | --- |
+| `files` | 每次传入一篇文档的 Markdown。返回完整的替换文本 | 选择本地文件、逐篇显示差异、勾选并保存。保存核对预览版本，沿用原 BOM |
+| `images` | 输入 JSON 字符串 `{"images":[{"digest":"…","extension":"png"}]}`。返回同顺序的文件名数组，编码为 JSON 字符串 | 识别本文的本地行内图片，计算 BLAKE3，按摘要与扩展名聚合。确认后复制图片并更新链接 |
+
+图片名称用小写字母、数字、下划线和连字符，名称主体最多 100 个字符，文件扩展名与输入一致。同一数组内各文件名唯一。可使用摘要生成稳定的名字。文件路径和文件字节由应用读取，模块接收的图片信息是摘要与扩展名。二次运行时可复用同名、同内容的副本。包清单和用法见[图片整理](../examples/plugins/image-organizer.md)与[批量格式化](../examples/plugins/batch-format.md)。
 
 ## 试用和发布
 
