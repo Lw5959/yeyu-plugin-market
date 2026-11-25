@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "name": "页屿插件市场",
+  "plugins": [
+    {
+      "apiVersion": 1,
+      "id": "yeyu.heading-levels",
+      "name": "标题层级",
+      "version": "1.0.0",
+      "description": "批量升一级或降一级 # 标题，适合移动和合并章节。保留代码块、YAML 和原有换行符。",
+      "author": "页屿",
+      "license": "MIT",
+      "sha256": "c999fb17e091c32c2c08c0e6e2c2b6672d286711e7699d54c1f1f5437bac251a",
+      "download": "packages/yeyu.heading-levels-c999fb17e091c32c2c08c0e6e2c2b6672d286711e7699d54c1f1f5437bac251a.yeyu-plugin.json"
+    },
+    {
+      "apiVersion": 1,
+      "id": "yeyu.task-list",
+      "name": "任务清单",
+      "version": "1.0.0",
+      "description": "把选中的文字或列表整理成待办，批量完成或重置 Markdown 任务。保留代码块和原有换行符。",
+      "author": "页屿",
+      "license": "MIT",
+      "sha256": "a87ea61120f08571ec547dc5a4b27b06675b414188465c4f8d19963ef07b3770",
+      "download": "packages/yeyu.task-list-a87ea61120f08571ec547dc5a4b27b06675b414188465c4f8d19963ef07b3770.yeyu-plugin.json"
+    },
+    {
+      "apiVersion": 1,
+      "id": "yeyu.trim-lines",
+      "name": "清理行尾空白",
+      "version": "1.0.0",
+      "description": "清理每一行末尾的空格和 Tab，保留原有换行符。清理也会移除 Markdown 的双空格硬换行。",
+      "author": "页屿",
+      "license": "MIT",
+      "sha256": "d15e134c9ec2d3ed5af6142fbe92001e6ec4048e3baf0e4558e623d9accdfeb0",
+      "download": "packages/yeyu.trim-lines-d15e134c9ec2d3ed5af6142fbe92001e6ec4048e3baf0e4558e623d9accdfeb0.yeyu-plugin.json"
+    }
+  ]
+}

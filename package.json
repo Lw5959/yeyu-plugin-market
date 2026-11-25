@@ -1,0 +1,9 @@
+{
+  "name": "yeyu-plugin-market",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "plugin:pack": "node scripts/package-plugin.mjs",
+    "plugin:market": "node scripts/build-plugin-market.mjs"
+  }
+}

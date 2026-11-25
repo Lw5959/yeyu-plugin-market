@@ -1,0 +1,5 @@
+/release/
+node_modules/
+*.o
+*.wasm
+.DS_Store

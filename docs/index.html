@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="浏览和下载页屿 Markdown 编辑器的开源插件。">
+  <title>页屿插件市场</title>
+  <style>
+    :root { color-scheme: light dark; --paper: #fff; --ink: #202020; --muted: #626262; --line: #dedede; --tint: #f5f5f5; }
+    @media (prefers-color-scheme: dark) {
+      :root { --paper: #1b1b1b; --ink: #ededed; --muted: #bdbdbd; --line: #3e3e3e; --tint: #262626; }
+    }
+    body { margin: 0; color: var(--ink); background: var(--paper); font: 16px/1.55 system-ui, sans-serif; }
+    main { max-width: 740px; margin: 0 auto; padding: clamp(24px, 6vw, 72px) 22px; }
+    h1 { margin: 0; font-size: clamp(30px, 5vw, 44px); letter-spacing: -.04em; }
+    h2 { margin: 0; font-size: 17px; }
+    p { margin: 8px 0; }
+    a { color: inherit; text-underline-offset: .18em; }
+    a:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+    nav { display: flex; gap: 16px; flex-wrap: wrap; margin: 12px 0 28px; font-size: 14px; }
+    .source { padding: 12px 16px; border-radius: 8px; background: var(--tint); overflow-wrap: anywhere; }
+    .source a { font: 13px ui-monospace, monospace; }
+    #catalog { display: grid; gap: 12px; margin-top: 24px; }
+    article { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; padding: 16px; border: 1px solid var(--line); border-radius: 8px; }
+    .details { margin-bottom: 0; color: var(--muted); font-size: 13px; }
+    .download { flex: none; padding: 5px 10px; font-size: 14px; border: 1px solid var(--line); border-radius: 6px; text-decoration: none; }
+    .download:hover { background: var(--tint); }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>页屿插件市场</h1>
+    <nav aria-label="市场链接">
+      <a href="https://github.com/Lw5959/yeyu-plugin-market">GitHub 仓库</a>
+      <a href="https://github.com/Lw5959/yeyu-plugin-market/blob/main/docs/plugins.md">插件开发指南</a>
+    </nav>
+    <div class="source">
+      <strong>应用目录地址</strong>
+      <p><a id="source" href="./index.json">index.json</a></p>
+    </div>
+    <div id="catalog" aria-label="插件列表"></div>
+    <p id="status" role="status">正在加载插件</p>
+  </main>
+  <script type="module" src="./market.js"></script>
+</body>
+</html>
