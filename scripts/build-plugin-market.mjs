@@ -12,8 +12,8 @@ const versionPattern = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[0-9A-Za-z-
 const plugins = packages.map(file => {
   const bytes = readFileSync(join(source, file))
   const { apiVersion, id, name, version, market, wasm, javascript } = JSON.parse(bytes.toString('utf8'))
-  const validProgram = ([1, 3].includes(apiVersion) && typeof wasm === 'string' && wasm && javascript === undefined)
-    || ([2, 3].includes(apiVersion) && typeof javascript === 'string' && javascript.trim() && wasm === undefined)
+  const validProgram = ([1, 3, 4].includes(apiVersion) && typeof wasm === 'string' && wasm && javascript === undefined)
+    || ([2, 3, 4].includes(apiVersion) && typeof javascript === 'string' && javascript.trim() && wasm === undefined)
   if (!Number.isInteger(apiVersion) || apiVersion < 1 || apiVersion > 0xFFFFFFFF
     || typeof id !== 'string' || !/^[a-zA-Z0-9_.-]{1,100}$/.test(id)
     || !validText(name) || !validText(version) || !versionPattern.test(version)

@@ -10,7 +10,7 @@ const module = readFileSync(modulePath)
 const script = /\.(?:mjs|js)$/i.test(modulePath)
 let payload
 if (script) {
-  if (![2, 3].includes(manifest.apiVersion)) throw new Error('JavaScript 清单须使用 apiVersion 2 或 3')
+  if (![2, 3, 4].includes(manifest.apiVersion)) throw new Error('JavaScript 清单须使用 apiVersion 2、3 或 4')
   const source = new TextDecoder('utf-8', { fatal: true }).decode(module)
   if (!source.trim()) throw new Error('JavaScript 模块为空')
   // 打包只检查语法，命令导出由页屿在隔离运行时校验。
@@ -19,7 +19,7 @@ if (script) {
   if (check.status !== 0) throw new Error('JavaScript 模块语法错误\n' + check.stderr.trim())
   payload = { javascript: source }
 } else {
-  if (![1, 3].includes(manifest.apiVersion)) throw new Error('WebAssembly 清单须使用 apiVersion 1 或 3')
+  if (![1, 3, 4].includes(manifest.apiVersion)) throw new Error('WebAssembly 清单须使用 apiVersion 1、3 或 4')
   if (!WebAssembly.validate(module)) throw new Error('无效的 WebAssembly 模块')
   const compiled = new WebAssembly.Module(module)
   const exports = new Map(WebAssembly.Module.exports(compiled).map(({ name, kind }) => [name, kind]))

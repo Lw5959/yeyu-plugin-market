@@ -1,0 +1,24 @@
+{
+  "apiVersion": 4,
+  "id": "yeyu.opencode",
+  "name": "OpenCode 工作区接入",
+  "version": "1.0.0",
+  "commands": [
+    {
+      "id": "copy_v2",
+      "label": "复制 OpenCode 2 配置",
+      "workflow": "mcp"
+    },
+    {
+      "id": "copy_v1",
+      "label": "复制 OpenCode 1 配置",
+      "workflow": "mcp"
+    }
+  ],
+  "market": {
+    "description": "在桌面端生成当前工作区的 OpenCode MCP 配置。OpenCode 可以搜索和读取 Markdown、查看选区，并向页屿提交待审修改。",
+    "author": "页屿",
+    "license": "MIT"
+  },
+  "javascript": "function server(input) {\n  const launcher = JSON.parse(input)?.mcpServers?.yeyu\n  if (typeof launcher?.command !== 'string' || !launcher.command || !Array.isArray(launcher.args) || !launcher.args.every(arg => typeof arg === 'string')) {\n    throw new Error('请先在页屿授权当前工作区并生成 MCP 启动配置')\n  }\n  // OpenCode 的本地服务把可执行文件和参数放在同一个数组中，保留路径中的空格。\n  return { type: 'local', command: [launcher.command, ...launcher.args] }\n}\n\nexport function copy_v2(input) {\n  return JSON.stringify({ mcp: { servers: { yeyu: server(input) } } }, null, 2)\n}\n\nexport function copy_v1(input) {\n  return JSON.stringify({ mcp: { yeyu: server(input) } }, null, 2)\n}\n"
+}

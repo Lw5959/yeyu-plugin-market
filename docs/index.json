@@ -80,6 +80,17 @@
       "download": "packages/yeyu.heading-levels-c999fb17e091c32c2c08c0e6e2c2b6672d286711e7699d54c1f1f5437bac251a.yeyu-plugin.json"
     },
     {
+      "apiVersion": 4,
+      "id": "yeyu.opencode",
+      "name": "OpenCode 工作区接入",
+      "version": "1.0.0",
+      "description": "在桌面端生成当前工作区的 OpenCode MCP 配置。OpenCode 可以搜索和读取 Markdown、查看选区，并向页屿提交待审修改。",
+      "author": "页屿",
+      "license": "MIT",
+      "sha256": "7e5c8505d1ba9f6e095fdcf822dbdb4b89575bcd0557f61ad58eb46bd3e4294f",
+      "download": "packages/yeyu.opencode-7e5c8505d1ba9f6e095fdcf822dbdb4b89575bcd0557f61ad58eb46bd3e4294f.yeyu-plugin.json"
+    },
+    {
       "apiVersion": 1,
       "id": "yeyu.task-list",
       "name": "任务清单",

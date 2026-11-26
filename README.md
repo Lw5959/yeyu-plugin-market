@@ -6,12 +6,13 @@
 - [应用目录](https://lw5959.github.io/yeyu-plugin-market/index.json)
 - [插件开发指南](docs/plugins.md)
 
-页屿 0.2.1 起，在「编辑 → 插件市场」默认连接本目录。页屿 0.2.3 的「内置插件」可离线安装下列九款插件。安装后在「已安装」中启用，再从「编辑 → 运行插件」执行命令。批量格式化和图片整理使用页屿 0.2.3 的文档工作流接口。
+页屿 0.2.1 起，在「编辑 → 插件市场」默认连接本目录。页屿 0.2.3 的「内置插件」可离线安装下列九款插件。安装后在「已安装」中启用，再从「编辑 → 运行插件」执行命令。批量格式化和图片整理使用页屿 0.2.3 的文档工作流接口。 桌面版 0.2.21 增加 OpenCode 工作区接入，也可离线安装。
 
 ## 插件
 
 | 插件 | 语言 | 用法与开发说明 |
 |---|---|---|
+| OpenCode 工作区接入 | JavaScript | [配置工作区 MCP](examples/plugins/opencode.md) |
 | 批量格式化 | Rust | [逐篇预览和整理多份 Markdown](examples/plugins/batch-format.md) |
 | 图片整理 | JavaScript | [归集本地图片、去重和更新路径](examples/plugins/image-organizer.md) |
 | 表格排版 | Rust | [对齐 Markdown 表格源码](examples/plugins/table-layout.md) |

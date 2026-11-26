@@ -4,6 +4,7 @@
 
 | 示例 | 语言 | 用法 |
 | --- | --- | --- |
+| [OpenCode 工作区接入](../examples/plugins/opencode.md) | JavaScript | 生成 OpenCode 1 和 2 的工作区 MCP 配置 |
 | [批量格式化](../examples/plugins/batch-format.md) | Rust | 同时整理多份文档的标题间距和表格，逐份预览后保存 |
 | [图片整理](../examples/plugins/image-organizer.md) | JavaScript | 预览图片归集，按内容去重并更新本地相对路径 |
 | [表格排版](../examples/plugins/table-layout.md) | Rust | 对齐表格源码并保留单元格、列对齐和原有行尾 |
@@ -77,6 +78,8 @@ pnpm plugin:pack examples/plugins/document-toc.yeyu-plugin.json examples/plugins
 | `images` | 输入 JSON 字符串 `{"images":[{"digest":"…","extension":"png"}]}`。返回同顺序的文件名数组，编码为 JSON 字符串 | 识别本文的本地行内图片，计算 BLAKE3，按摘要与扩展名聚合。确认后复制图片并更新链接 |
 
 图片名称用小写字母、数字、下划线和连字符，名称主体最多 100 个字符，文件扩展名与输入一致。同一数组内各文件名唯一。可使用摘要生成稳定的名字。文件路径和文件字节由应用读取，模块接收的图片信息是摘要与扩展名。二次运行时可复用同名、同内容的副本。包清单和用法见[图片整理](../examples/plugins/image-organizer.md)与[批量格式化](../examples/plugins/batch-format.md)。
+
+桌面版 0.2.21 提供接口 4。`mcp` 工作流把已授权工作区的 MCP 启动配置作为 JSON 字符串传入命令，形状为 `{"mcpServers":{"yeyu":{"command":"…","args":["…"]}}}`。命令返回客户端配置文本，页屿提供复制操作。实际的文档访问和修改建议仍由 MCP 服务检查工作区授权。 [OpenCode 示例](../examples/plugins/opencode.md)
 
 ## 试用和发布
 
