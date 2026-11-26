@@ -9,6 +9,15 @@
 
 例如，在页屿选中一段 Markdown 后，对 OpenCode 说「用页屿 MCP 读取当前选区，精简这段文字，再提交一份修改建议」。
 
+OpenCode 2.4.2 的运行时接口也可以注册插件生成的配置。项目文件已保存为纯 JSON、服务已启动、`mcp list` 仍为空时，可在 macOS 或 Linux 的项目目录使用下列命令。运行时注册的条目在服务重启后需重新注册。
+
+```sh
+opencode api experimental.mcp.add \
+  --param server=yeyu --param "directory=$PWD" \
+  --data "$(jq -c '{config:.mcp.servers.yeyu}' opencode.json)"
+opencode mcp list
+```
+
 重建插件包可运行下方命令。源模块接收页屿生成的启动配置，并将其转换为对应 OpenCode 版本的 JSON。导出函数与清单中的命令 ID 对应。
 
 ```sh
